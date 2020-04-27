@@ -15,6 +15,8 @@
  */
 package com.google.android.exoplayer2.demo;
 
+import static com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection.*;
+
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaDrm;
@@ -63,6 +65,7 @@ import com.google.android.exoplayer2.ui.spherical.SphericalGLSurfaceView;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.HttpDataSource;
 import com.google.android.exoplayer2.util.Assertions;
+import com.google.android.exoplayer2.util.Clock;
 import com.google.android.exoplayer2.util.ErrorMessageProvider;
 import com.google.android.exoplayer2.util.EventLogger;
 import com.google.android.exoplayer2.util.Util;
@@ -351,7 +354,14 @@ public class PlayerActivity extends AppCompatActivity
       TrackSelection.Factory trackSelectionFactory;
       String abrAlgorithm = intent.getStringExtra(ABR_ALGORITHM_EXTRA);
       if (abrAlgorithm == null || ABR_ALGORITHM_DEFAULT.equals(abrAlgorithm)) {
-        trackSelectionFactory = new AdaptiveTrackSelection.Factory();
+        trackSelectionFactory = new AdaptiveTrackSelection.Factory(
+            DEFAULT_MIN_DURATION_FOR_QUALITY_INCREASE_MS,
+            DEFAULT_MAX_DURATION_FOR_QUALITY_DECREASE_MS,
+            1000,
+            DEFAULT_BANDWIDTH_FRACTION,
+            DEFAULT_BUFFERED_FRACTION_TO_LIVE_EDGE_FOR_QUALITY_INCREASE,
+            1000,
+            Clock.DEFAULT);
       } else if (ABR_ALGORITHM_RANDOM.equals(abrAlgorithm)) {
         trackSelectionFactory = new RandomTrackSelection.Factory();
       } else {
